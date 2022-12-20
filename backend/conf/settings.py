@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -27,7 +28,7 @@ SECRET_KEY = 'django-insecure-$k)kzfv^%rl2+h8ccnst%vn^*9o^=i4l#*5i^&$-=wngrh+3xz
 DEBUG = True
 
 if DEBUG:
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = ["*", "localhost", "0.0.0.0", ".ngrok.io"]
 else:
     ALLOWED_HOSTS = ["*"]
 
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'apps.movies',
     'apps.users',
     'drf_spectacular',
 ]
@@ -61,8 +63,8 @@ ROOT_URLCONF = 'conf.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        "DIRS": ['' , os.path.join(BASE_DIR, 'dist'), ],
+        "APP_DIRS": True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -118,14 +120,23 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+# Directory where Django static files are collected
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# URL where static files will be served
+STATIC_URL = '/static/'
+
+# Vue assets directory (assetsDir)
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'dist/static'),
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -162,3 +173,8 @@ SPECTACULAR_SETTINGS = {
         'syntaxHighlight.theme': 'monokai',
     },
 }
+
+print(">>> ENV: ", os.environ.get("ENV"))
+
+MEDIA_URL='/media/'
+MEDIA_ROOT=os.path.join(BASE_DIR,'media')

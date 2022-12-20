@@ -1,0 +1,182 @@
+http://127.0.0.1:8000/api/schema/swagger-ui/
+###
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjQ5MTY4LCJpYXQiOjE2NzE1NjI3NjgsImp0aSI6ImMyMTJhMzZkM2Y4NzRmYjA4NmI2MDg2NWVhMmE1NDcwIiwidXNlcl9pZCI6MX0.uWcxJqPghGtxonl1D7uHKbizvtzTD_Jmc6yyFLiUxPo
+@authRefresh = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY3MjExODYzNCwiaWF0IjoxNjY2OTM0NjM0LCJqdGkiOiI0ODA4YzA0MWU3YjY0ZGI1OWEyMzY4NTY0ZjNhMDAxOSIsInVzZXJfaWQiOjF9.CK_bMxH5Ng5YNWVzE-2FG38r7SeQDmvSOMFjtak98_I
+###
+POST  http://localhost:8000/api/access/login/
+Content-Type: application/json
+
+{
+    "email": "admin@example.com",
+    "password": "123456"
+}
+###
+GET  http://localhost:8000/api/users/
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+###
+POST  http://localhost:8000/api/users/
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "password": "123456",
+  "email": "astofo@example.com",
+  "name": "Astofoboldo Neves",
+  "is_verified": true,
+  "is_active": true,
+  "is_superuser": false,
+  "is_staff": false,
+  "auth_provider": "email"
+}
+###
+POST http://127.0.0.1:8000/api/movies/
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+Authorization: Bearer {{authToken}}
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="title"
+
+teste1
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="user"
+
+1
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="upload"; filename="stng01.jpg"
+Content-Type: image/png
+
+< ./stng01.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+POST  http://localhost:8000/api/token/
+Content-Type: application/json
+
+{
+    "email": "admin@gmail.com",
+    "password": "123456"
+}
+###
+POST  http://localhost:8000/api/auth/login/
+Content-Type: application/json
+
+{
+    "email": "admin@gmail.com",
+    "password": "123456"
+}
+###
+POST  http://localhost:8000/api/auth/login/
+Content-Type: application/json
+
+{
+    "email": "admin@gmail.com",
+    "password": "123456"
+}
+###
+POST  http://localhost:8000/api/auth/logout/
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY3MjIyMDUwNSwiaWF0IjoxNjY3MDM2NTA1LCJqdGkiOiI0ZDM5NTEyMThhOWY0OTQ4OWVkNTUwNDBlZWU4NDY2MSIsInVzZXJfaWQiOjF9.u-QJmf34ez0LI1nesX-2dGHlS0VzXnWj1IdNOq8Usns"
+}
+###
+GET  http://127.0.0.1:8000/users/teste
+Content-Type: application/json
+###
+
+###
+GET  http://127.0.0.1:8000/users/
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+###
+GET  http://127.0.0.1:8000/groups/
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+###
+POST  http://127.0.0.1:8000/users/
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "first_name": "astofoboldo",
+    "last_name": "astofoboldo",
+    "is_active": true,
+    "email": "asto@example.com",
+    "password": "123456"
+}
+###
+POST  http://127.0.0.1:8000/users/
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "first_name": "Miforonalda",
+    "last_name": "Esteves",
+    "is_active": true,
+    "email": "mifo@example.com",
+    "password": "123456"
+}
+###
+PATCH http://127.0.0.1:8000/users/2/
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "first_name": "Astofoboldo",
+    "last_name": "Neves"
+}
+###
+GET  http://127.0.0.1:8000/users/
+Content-Type: application/json
+Authorization: Basic admin:123456
+###
+POST  http://127.0.0.1:8000/users/
+Content-Type: application/json
+Authorization: Basic admin:123456
+
+{
+    "name": "astofoboldo",
+    "email": "asto@example.com",
+    "password": "123456",
+    "groups": []
+}
+###
+GET  http://127.0.0.1:8000/users/2/
+Content-Type: application/json
+Authorization: Basic admin:123456
+###
+GET http://127.0.0.1:8000/api-auth/login/
+Content-Type: application/json
+
+{
+    "name": "admin",
+    "email": "admin@example.com",
+    "password": "123456",
+    "groups": []
+}
+###
+curl
+ -u "admin:123456"
+ -X GET
+ http://127.0.0.1:8000/users/
+
+###
+curl http://127.0.0.1:8000/users/ -X POST -u admin:123456 \
+ -H 'Content-Type: application/json' \
+ -d '{"name": "miforonalda", "email": "mifo@example.com", "password": "123456", "groups": []}'
+
+```
+
+Com a extensão funcionando você deve ver um link **Send Request** acima da requisição, por exemplo:
+
+```
+###
+GET http://127.0.0.1:8000/api-auth/login/
+###
+curl \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"name": "admin", "password": "123456"}' \
+  http://localhost:8000/api/token/
