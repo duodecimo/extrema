@@ -1,0 +1,1 @@
+echo "from apps.users.models import User; User.objects.create_superuser('admin@example.com', '123456')" | python manage.py shell
