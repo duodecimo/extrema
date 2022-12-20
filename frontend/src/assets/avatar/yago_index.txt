@@ -1,0 +1,35 @@
+sprites: 512 x 512
+
+Em ordem esq->dir:
+
+A,E,I
+F,V
+O
+CH, J, SH
+C,D,G,K,N,S,T,X,Y,Z
+B, M, P
+R
+TH
+U
+EE
+L
+Q,W
+
+
+****************************
+Use regular expressions! Here is your definition of a syllable expressed in regex:
+
+First, zero or more consonants: [^aeiouy]*
+Then, one or more vowels: [aeiouy]+
+After that, zero or one of the following:
+Consonants, followed by the end of the word: [^aeiouy]*$
+A consonant (if it is followed by another consonant): [^aeiouy](?=[^aeiouy])
+*********************************
+
+const syllableRegex = /[^aeiouy]*[aeiouy]+(?:[^aeiouy]*$|[^aeiouy](?=[^aeiouy]))?/gi;
+
+function syllabify(words) {
+    return words.match(syllableRegex);
+}
+
+console.log(['away', 'hair', 'halter', 'hairspray', 'father', 'lady', 'kid'].map(syllabify))
