@@ -3,17 +3,20 @@ import axios from "axios";
 
 const systemStore = useSystemStore();
 
-export async function useAxios(method, endpoint, payload) {
+export async function useAxios(method, endpoint, payload, heads=null) {
   var f_response = null;
   var f_err = null;
+  if (heads === null) {
+    heads = {
+      "Authorization": "Bearer " + systemStore.auth["access"]
+    };
+  }
   await new Promise((resolve, reject) => {
     axios({
       method: method || "GET",
       url: endpoint,
       data: payload,
-      headers: {
-        Authorization: "Bearer " + systemStore.auth["access"],
-      },
+      headers: heads,
     })
       .then((response) => {
         f_response = response;
@@ -31,9 +34,6 @@ export async function useAxios(method, endpoint, payload) {
         resolve(response);
       })
       .catch((err) => {
-        var heads = {
-          Authorization: "Bearer " + systemStore.auth["access"],
-        };
         console.log(
           "COMPOSABLE - useAxios.js - method useAxios (houve erro): ",
           method || "GET",
@@ -62,9 +62,7 @@ export async function useAxios(method, endpoint, payload) {
                 method: method || "GET",
                 url: endpoint,
                 data: payload,
-                headers: {
-                  Authorization: "Bearer " + systemStore.auth["access"],
-                },
+                headers: heads,
               })
                 .then((response) => {
                   f_response = response;
