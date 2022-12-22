@@ -1,23 +1,24 @@
 <script setup>
-  // const items = [
-  //   { title: "Home", icon: "mdi-view-dashboard", to: "/" },
-  //   { title: "About", icon: "mdi-forum", to: "/" },
-  //   { title: "Voices", icon: "mdi-bullhorn", to: "/voices" },
-  //   { title: "Login", icon: "mdi-login", to: "/login" },
-  //   { title: "Usuários", icon: "mdi-account-multiple", to: "/users" },
-  //   { title: "Upload", icon: "mdi-file-upload", to: "/upload" },
-  // ];
-  const items = [
-    { title: "Home", icon: "mdi-view-dashboard", to: "/" },
-    { title: "About", icon: "mdi-forum", to: "/" },
-    { title: "Login", icon: "mdi-login", to: "/login" },
-    { title: "Voices", icon: "mdi-bullhorn", to: "/voices" },
-    { title: "Uploads", icon: "mdi-upload", to: "/uploads" }
-  ];
+// const items = [
+//   { title: "Home", icon: "mdi-view-dashboard", to: "/" },
+//   { title: "About", icon: "mdi-forum", to: "/" },
+//   { title: "Voices", icon: "mdi-bullhorn", to: "/voices" },
+//   { title: "Login", icon: "mdi-login", to: "/login" },
+//   { title: "Usuários", icon: "mdi-account-multiple", to: "/users" },
+//   { title: "Upload", icon: "mdi-file-upload", to: "/upload" },
+// ];
+const items = [
+  { title: "Home", icon: "mdi-view-dashboard", to: "/" },
+  { title: "About", icon: "mdi-forum", to: "/" },
+  { title: "Login", icon: "mdi-login", to: "/login" },
+  { title: "Voices", icon: "mdi-bullhorn", to: "/voices" },
+  { title: "Uploads", icon: "mdi-upload", to: "/uploads" },
+  { title: "Play Movie", icon: "mdi-movie", to: "/play" },
+];
 
-  const getImageUrl = name => {
-    return new URL(name, import.meta.url).href;
-  };
+const getImageUrl = (name) => {
+  return new URL(name, import.meta.url).href;
+};
 </script>
 
 <template>
