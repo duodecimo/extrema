@@ -18,6 +18,10 @@ const selected_movie = ref(null);
 
 onMounted(() => {
   selected_movie.value = null;
+  var loc = window.location.pathname;
+  var dir = loc.substring(0, loc.lastIndexOf("/"));
+  console.log(">>>>>> Current path: ", window.location.pathname);
+  console.log(">>>>>> Current directory: ", dir);
   moviesStore
     .getMovies()
     .then((response) => {

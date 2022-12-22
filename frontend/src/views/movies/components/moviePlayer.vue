@@ -31,7 +31,8 @@ const emit = defineEmits(["end"]);
     </v-row>
     <v-row justify="center">
       <video controls width="800" autoplay ref="myVideoPlayer">
-        <source :src="movieUrl" />
+        <!-- <source :src="movieUrl" /> -->
+        <source src="/extra2/extrema/backend/media/movies/duo01.mp4" />
         Sorry, your browser doesn't support embedded videos.
       </video></v-row
     >
