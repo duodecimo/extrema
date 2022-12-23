@@ -1,6 +1,6 @@
 http://127.0.0.1:8000/api/schema/swagger-ui/
 ###
-@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNzQ5MjQyLCJpYXQiOjE2NzE2NjI4NDIsImp0aSI6Ijc4MWVkOGQ0MDIyOTRlMjhhMTY4YTRkOTQ5N2QzM2JlIiwidXNlcl9pZCI6MX0.lreNFJcDNMruNXCd8YOu0G_5ZoSe2Ap6oGf32vBDw2Y
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNzkwNDAxLCJpYXQiOjE2NzE3MDQwMDEsImp0aSI6ImE5MjRlOTQ5MDM2MzRhNzU4MTlhODM4YWFiZWRkOTkxIiwidXNlcl9pZCI6MX0.CQvqfTgNq5A3nJKsxXKpl4xAS9ij-Z547_PyNrweeOE
 @authRefresh = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY3MjExODYzNCwiaWF0IjoxNjY2OTM0NjM0LCJqdGkiOiI0ODA4YzA0MWU3YjY0ZGI1OWEyMzY4NTY0ZjNhMDAxOSIsInVzZXJfaWQiOjF9.CK_bMxH5Ng5YNWVzE-2FG38r7SeQDmvSOMFjtak98_I
 ###
 POST  http://localhost:8000/api/access/login/
@@ -31,6 +31,10 @@ Authorization: Bearer {{authToken}}
 }
 ###
 GET  http://localhost:8000/api/movies/3/
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+###
+GET  http://localhost:8000/api/movies/
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 ###
