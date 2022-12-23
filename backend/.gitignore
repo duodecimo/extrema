@@ -3,4 +3,4 @@ db.sqlite3
 dist
 media
 static
-
+docs/ngrokHOWTO.txt
