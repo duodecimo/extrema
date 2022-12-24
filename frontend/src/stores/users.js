@@ -10,11 +10,13 @@ export const useUsersStore = defineStore({
       if (returned.response) {
         this.users = returned.response.data.results;
         console.log("Em users.js - fetchUsers - ok");
+        return true;
       }
       if (returned.err) {
         this.users = null;
         console.log("Em users.js - fetchUsers - erro");
+        return false;
       }
-    },
-  },
+    }
+  }
 });

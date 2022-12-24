@@ -32,10 +32,10 @@ export const useSystemStore = defineStore({
             reject(err);
           })
           .finally(() => {
-            setTimeout(() => {
-              this.loading = false;
-              console.log(">>> timeout para desligar loading");
-            }, 5000);
+            this.loading = false;
+            // setTimeout(() => {
+            //   console.log(">>> timeout para desligar loading");
+            // }, 5000);
           });
       });
     },
@@ -44,12 +44,12 @@ export const useSystemStore = defineStore({
       return new Promise((resolve, reject) => {
         if (this.auth["refresh"]) {
           const payload = {
-            refresh: this.auth["refresh"],
+            refresh: this.auth["refresh"]
           };
           console.log("useSystemStore - tokenRefresh - o payload é: ", payload);
           axios
             .post("/api/sys_admin/token/refresh/", payload)
-            .then((response) => {
+            .then(response => {
               this.auth["acess"] = response.data.access;
               console.log(
                 "useSystemStore - tokenRefresh - response (novo acesso): ",
@@ -57,7 +57,7 @@ export const useSystemStore = defineStore({
               );
               resolve("sucesso atualizando token.");
             })
-            .catch((err) => {
+            .catch(err => {
               console.log(
                 "useSystemStore - tokenRefresh - erro: O token de refresh deve estar vencido, erro: ",
                 err.response
@@ -79,6 +79,6 @@ export const useSystemStore = defineStore({
           reject("Falha atualizando token: verifique se está logado.");
         }
       });
-    },
-  },
+    }
+  }
 });

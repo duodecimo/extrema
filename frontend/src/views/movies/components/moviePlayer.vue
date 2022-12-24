@@ -8,7 +8,26 @@ const props = defineProps({
   },
 });
 
+const videoPlayer = ref(null);
+
+const isPlaying = ref(false);
+
 const emit = defineEmits(["end"]);
+
+function play() {
+  videoPlayer.value.play();
+  isPlaying.value = true;
+}
+
+function pause() {
+  videoPlayer.value.pause();
+  isPlaying.value = false;
+}
+
+onMounted(() => {
+  console.log("In moviePlayer - onMounted() - video: ", videoPlayer.value);
+  console.log("In moviePlayer - onMounted() - video src: ", videoPlayer.value.src);
+});
 </script>
 
 <template>
@@ -30,15 +49,24 @@ const emit = defineEmits(["end"]);
       </div>
     </v-row>
     <v-row justify="center">
-      <video controls width="800" autoplay ref="myVideoPlayer">
+      <video width="800" ref="videoPlayer">
         <source :src="movieUrl" />
         Sorry, your browser doesn't support embedded videos.
       </video></v-row
     >
+    <p />
     <v-row no-gutters justify="center" align="center">
+      <v-col cols="2">
+        <v-btn color="primary" @click.stop="play()">play</v-btn>
+      </v-col>
+      <v-col cols="2">
+        <v-btn color="primary" @click.stop="pause()">pause</v-btn>
+      </v-col>
       <v-col cols="2">
         <v-btn color="primary" @click.stop="emit('end')">Fim</v-btn>
       </v-col>
     </v-row>
   </v-container>
 </template>
+
+// video controls width="800" autoplay ref="videoPlayer"

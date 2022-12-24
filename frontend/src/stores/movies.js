@@ -36,10 +36,12 @@ export const useMoviesStore = defineStore({
           "Em movies.js - useSystemStore - getMovies() - this.movies: ",
           this.movies
         );
+        return "Sucesso obtendo lista de filmes.";
       }
       if (returned.err) {
         this.movies = null;
         console.log("Em movies.js - useSystemStore - getMovies() - erro ");
+        return "Erro obtendo lista de filmes.";
       }
     }
   }
