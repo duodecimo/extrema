@@ -8,11 +8,11 @@ const props = defineProps({
   },
 });
 
-const videoPlayer = ref(null);
+const emit = defineEmits(["end"]);
 
 const isPlaying = ref(false);
 
-const emit = defineEmits(["end"]);
+const videoPlayer = ref(null);
 
 function play() {
   videoPlayer.value.play();
@@ -22,6 +22,14 @@ function play() {
 function pause() {
   videoPlayer.value.pause();
   isPlaying.value = false;
+}
+
+function foward() {
+  videoPlayer.value.foward();
+}
+
+function rewind() {
+  videoPlayer.value.rewind();
 }
 
 onMounted(() => {
@@ -49,24 +57,31 @@ onMounted(() => {
       </div>
     </v-row>
     <v-row justify="center">
-      <video width="800" ref="videoPlayer">
+      <video controls width="500" ref="videoPlayer">
         <source :src="movieUrl" />
         Sorry, your browser doesn't support embedded videos.
       </video></v-row
     >
     <p />
-    <v-row no-gutters justify="center" align="center">
-      <v-col cols="2">
+    <v-row justify="center" align="center">
+      <!-- <v-col cols="2">
         <v-btn color="primary" @click.stop="play()">play</v-btn>
       </v-col>
       <v-col cols="2">
         <v-btn color="primary" @click.stop="pause()">pause</v-btn>
       </v-col>
       <v-col cols="2">
+        <v-slider readonly="" v-model="videoPlayer.currentTime"></v-slider>
+      </v-col>
+      <v-col cols="2">
+        <v-btn color="primary" @click.stop="foward()">foward</v-btn>
+      </v-col>
+      <v-col cols="2">
+        <v-btn color="primary" @click.stop="rewind()">rewind</v-btn>
+      </v-col> -->
+      <v-col cols="2">
         <v-btn color="primary" @click.stop="emit('end')">Fim</v-btn>
       </v-col>
     </v-row>
   </v-container>
 </template>
-
-// video controls width="800" autoplay ref="videoPlayer"
