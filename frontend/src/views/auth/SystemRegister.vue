@@ -14,30 +14,30 @@ const success = ref(false);
 watchEffect(() => {
   if (success.value && !message.value) {
     // vamos navegar para home
-    // condições: sucesso no login e snackMenssender dismissed.
+    // condições: sucesso no registro e snackMenssender dismissed.
     console.log(">> watch success: ", success.value, " message: ", message.value);
-    router.push("/");
+    router.push("/login");
   }
   console.log("Em SystemLogin - watchEffect - loading: ", systemStore.loading);
 });
 const payload = reactive({
-  email: "",
-  password: "",
+  email: null,
+  name: null,
+  password: null,
 });
 
-function login() {
+function register() {
   systemStore
-    .login(payload)
+    .register(payload)
     .then((response) => {
-      console.log("Em SystemLogin - login - resultado: ", response);
-      message.value = "Sucesso entrando no sistema.";
+      console.log("Em SystemRegister - register - resultado: ", response);
+      message.value = "Sucesso se registrando no sistema.";
       success.value = true;
     })
     .catch((err) => {
-      console.log("> Em SystemLogin - login - erro: ", err.message);
+      console.log("Em SystemRegister - register - erro: ", err.message);
       message.value = "Erro: " + err.message;
     });
-  console.log("Em SystemLogin - login - auth: ", systemStore.auth);
 }
 </script>
 
@@ -63,9 +63,25 @@ function login() {
           <v-container>
             <v-row
               ><v-col cols="12" md="8">
-                <span class="text-h5 text-lg-h3 text-break">Acesso ao sistema</span>
+                <span class="text-h5 text-lg-h3 text-break">Registro de usuário</span>
               </v-col></v-row
             >
+
+            <v-row>
+              <v-col cols="2" />
+              <v-col cols="10" class="text-left">
+                <span class="text-h4 text-lg-h3 text-break">nome</span>
+                <v-text-field
+                  counter="35"
+                  required
+                  v-model="payload.name"
+                  placeholder="Seu nome ..."
+                  outlined
+                  :dense="mdAndDown"
+                />
+              </v-col>
+            </v-row>
+
             <v-row>
               <v-col cols="2" />
               <v-col cols="10" class="text-left">
@@ -96,16 +112,6 @@ function login() {
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="8">
-                <v-btn
-                  v-if="ambiente === 'development'"
-                  color="primary"
-                  :disabled="success"
-                  :x-small="mdAndDown"
-                  @click="fakeLogin()"
-                  icon="mdi-skull-crossbones"
-                ></v-btn
-              ></v-col>
               <v-col cols="4">
                 <v-btn
                   variant="flat"
@@ -113,24 +119,8 @@ function login() {
                   :disabled="success"
                   prepend-icon="mdi-login"
                   :x-small="mdAndDown"
-                  @click.stop="login"
-                  >entrar
-                </v-btn>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="8">
-                <span>Sua primeira visita? registre-se!</span>
-              </v-col>
-              <v-col cols="4">
-                <v-btn
-                  variant="flat"
-                  color="primary"
-                  :disabled="success"
-                  prepend-icon="mdi-login"
-                  :x-small="mdAndDown"
-                  to="/register"
-                  >registre-se
+                  @click.stop="register"
+                  >registrar
                 </v-btn>
               </v-col>
             </v-row>

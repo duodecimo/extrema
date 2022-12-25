@@ -79,6 +79,32 @@ export const useSystemStore = defineStore({
           reject("Falha atualizando token: verifique se está logado.");
         }
       });
+    },
+    async register(payload) {
+      console.log("Em system.js - register - payload: ", payload);
+      return new Promise((result, reject) => {
+        this.loading = true;
+        axios
+          .post("/api/access/register/", payload)
+          .then(response => {
+            console.log(
+              "useSystemStore - register - resultado: ",
+              response.data
+            );
+            result("useSystemStore - registro - bem sucedido.");
+          })
+          .catch(err => {
+            this.auth = null;
+            console.log("useSystemStore - registro -  erro: ", err);
+            reject(err);
+          })
+          .finally(() => {
+            this.loading = false;
+            // setTimeout(() => {
+            //   console.log(">>> timeout para desligar loading");
+            // }, 5000);
+          });
+      });
     }
   }
 });
