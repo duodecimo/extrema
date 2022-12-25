@@ -30,13 +30,15 @@ Authorization: Bearer {{authToken}}
   "auth_provider": "email"
 }
 ###
+DELETE  http://localhost:8000/api/movies/3/
+Content-Type: application/json
+###
 GET  http://localhost:8000/api/movies/3/
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 ###
 GET  http://localhost:8000/api/movies/
 Content-Type: application/json
-Authorization: Bearer {{authToken}}
 ###
 POST http://127.0.0.1:8000/api/movies/
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
