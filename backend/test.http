@@ -11,6 +11,15 @@ Content-Type: application/json
     "password": "123456"
 }
 ###
+POST  http://localhost:8000/api/access/register/
+Content-Type: application/json
+
+{
+    "name": "Colimofério Nunes",
+    "email": "colia@example.com",
+    "password": "123456"
+}
+###
 GET  http://localhost:8000/api/users/
 Content-Type: application/json
 Authorization: Bearer {{authToken}}

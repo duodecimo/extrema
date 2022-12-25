@@ -77,9 +77,21 @@ class RegisterSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         email = attrs.get("email", "")
         name = attrs.get("name", "")
+        print(
+            ">>> In apps.users.serializers.RegisterSerializer - validate - email: ",
+            email,
+            " name: ",
+            name,
+            " attrs: ",
+            attrs,
+        )
 
-        if not name.isalnum():
-            raise serializers.ValidationError(self.default_error_messages)
+        # Problema na função. Por exemplo, espaço (no nome) não é alnum ...
+        # if not name.isalnum():
+        #     print(
+        #         ">>> In apps.users.serializers.RegisterSerializer - validate - name is NOT alnum! "
+        #     )
+        #     raise serializers.ValidationError(self.default_error_messages)
         return attrs
 
     def create(self, validated_data):
