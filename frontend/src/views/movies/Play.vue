@@ -1,5 +1,3 @@
-// { // "title": "string", // "is_active": true, // "upload": "string", // "user": 0 // }
-
 <script setup>
 import { useMoviesStore } from "@/stores/movies";
 import { useSystemStore } from "@/stores/system";
@@ -14,14 +12,15 @@ const moviesStore = useMoviesStore();
 const systemStore = useSystemStore();
 const message = ref(null);
 const success = ref(false);
-const selected_movie = ref(null);
+const selectedMovieURL = ref(null);
+const selectedMovieID = ref(null);
 
 onMounted(() => {
-  selected_movie.value = null;
-  var loc = window.location.pathname;
-  var dir = loc.substring(0, loc.lastIndexOf("/"));
-  console.log(">>>>>> Current path: ", window.location.pathname);
-  console.log(">>>>>> Current directory: ", dir);
+  console.log("In Play.vue - onMounted()");
+  // var loc = window.location.pathname;
+  // var dir = loc.substring(0, loc.lastIndexOf("/"));
+  // console.log(">>>>>> Current path: ", window.location.pathname);
+  // console.log(">>>>>> Current directory: ", dir);
   moviesStore
     .getMovies()
     .then((response) => {
@@ -55,11 +54,15 @@ onMounted(() => {
         />
       </div>
     </v-row>
-    <div v-if="success && selected_movie">
-      <span>selected movie: {{ selected_movie }}</span>
+    <div v-if="success && selectedMovieURL && selectedMovieID">
+      <span>selected movie: {{ selectedMovieURL }} id: {{ selectedMovieID }}</span>
       <v-row no-gutters justify="center" align="center">
         <v-col>
-          <movie-player :movieUrl="selected_movie" @end="selected_movie = null" />
+          <movie-player
+            :selectedMovieURL="selectedMovieURL"
+            :selectedMovieID="selectedMovieID"
+            @end="(selectedMovieURL = null), (selectedMovieID = null)"
+          />
         </v-col>
       </v-row>
     </div>
@@ -80,7 +83,9 @@ onMounted(() => {
                   v-for="movie in moviesStore.movies"
                   :key="movie.id"
                   :title="movie.title"
-                  @click-once="selected_movie = movie.upload"
+                  @click-once="
+                    (selectedMovieURL = movie.url), (selectedMovieID = movie.id)
+                  "
                 ></v-list-item>
               </v-list>
             </v-col>
@@ -90,5 +95,3 @@ onMounted(() => {
     </div>
   </v-container>
 </template>
-//
-<!-- :on-click-once="(selected_movie = movie.upload)" -->

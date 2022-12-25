@@ -7,9 +7,15 @@ const systemStore = useSystemStore();
 
 export const useMoviesStore = defineStore({
   id: "movies",
-  state: () => ({ movie: null, movies: null, loading: false }),
+  state: () => ({
+    movie: null,
+    movies: null,
+    movieSession: null,
+    loading: false
+  }),
   actions: {
     async uploadMovie(payload) {
+      console.log("Em movies.js - uploadMovie() - payload: ", payload);
       var heads = {
         Authorization: "Bearer " + systemStore.auth["access"],
         "Content-Type": "multipart/form-data"
@@ -42,6 +48,22 @@ export const useMoviesStore = defineStore({
         this.movies = null;
         console.log("Em movies.js - useSystemStore - getMovies() - erro ");
         return "Erro obtendo lista de filmes.";
+      }
+    },
+    async postMovieSession(payload) {
+      const returned = await useAxios("POST", "/api/movieSessions/", payload);
+      if (returned.response) {
+        this.movieSession = returned.response.data.results;
+        console.log(
+          "Em movies.js - postMovieSession - movieSession: ",
+          this.movieSession
+        );
+        return "Sucesso registrando a sessão.";
+      }
+      if (returned.err) {
+        this.movieSession = null;
+        console.log("Em movies.js - postMovieSession() - erro");
+        return "Erro registrando a sessão.";
       }
     }
   }

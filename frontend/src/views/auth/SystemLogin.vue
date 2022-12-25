@@ -15,12 +15,7 @@ watchEffect(() => {
   if (success.value && !message.value) {
     // vamos navegar para home
     // condições: sucesso no login e snackMenssender dismissed.
-    console.log(
-      ">> watch success: ",
-      success.value,
-      " message: ",
-      message.value
-    );
+    console.log(">> watch success: ", success.value, " message: ", message.value);
     router.push("/");
   }
   console.log("Em SystemLogin - watchEffect - loading: ", systemStore.loading);
@@ -59,7 +54,7 @@ function login() {
       <div v-if="message">
         <SnackMessenger
           :message="message"
-          :timeout="12000"
+          :timeout="3000"
           @dismissed.once="message = null"
         />
       </div>
@@ -68,9 +63,7 @@ function login() {
           <v-container>
             <v-row
               ><v-col cols="12" md="8">
-                <span class="text-h5 text-lg-h3 text-break"
-                  >Acesso ao sistema</span
-                >
+                <span class="text-h5 text-lg-h3 text-break">Acesso ao sistema</span>
               </v-col></v-row
             >
             <v-row>

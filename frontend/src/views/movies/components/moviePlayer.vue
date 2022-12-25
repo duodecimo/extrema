@@ -1,18 +1,29 @@
 <script setup>
 import { onMounted, ref, reactive } from "vue";
+import { useSystemStore } from "@/stores/system";
+import { useMoviesStore } from "@/stores/movies";
+import SystemSpinning from "@/components/system/systemSpinning.vue";
+import SnackMessenger from "@/components/utils/snackMessenger.vue";
 
 const props = defineProps({
-  movieUrl: {
+  selectedMovieURL: {
     type: URL,
+    required: true,
+  },
+  selectedMovieID: {
+    type: Number,
     required: true,
   },
 });
 
 const emit = defineEmits(["end"]);
+const moviesStore = useMoviesStore();
+const systemStore = useSystemStore();
 
 const isPlaying = ref(false);
-
 const videoPlayer = ref(null);
+const message = ref(null);
+const success = ref(false);
 
 function play() {
   videoPlayer.value.play();
@@ -32,9 +43,35 @@ function rewind() {
   videoPlayer.value.rewind();
 }
 
-onMounted(() => {
-  console.log("In moviePlayer - onMounted() - video: ", videoPlayer.value);
-  console.log("In moviePlayer - onMounted() - video src: ", videoPlayer.value.src);
+onMounted(async () => {
+  console.log("In moviePlayer - onMounted()");
+  console.log(
+    "In moviePlayer - onMounted() - props - selectedMovieID: ",
+    props.selectedMovieID
+  );
+  console.log(
+    "In moviePlayer - onMounted() - props - selectedMovieURL: ",
+    props.selectedMovieURL
+  );
+  console.log(
+    "In moviePlayer - onMounted() - props - user id: ",
+    systemStore.auth.userid
+  );
+  var result = await moviesStore
+    .postMovieSession({
+      movie: props.selectedMovieID,
+      user: systemStore.auth.userid,
+    })
+    .then((response) => {
+      success.value = true;
+      console.log("In moviePlayer.vue - onMounted() - response: ", response);
+      message.value = response;
+    })
+    .catch((err) => {
+      success.value = false;
+      console.log("In moviePlayer.vue - onMounted() - erro: ", err);
+      message.value = err;
+    });
 });
 </script>
 
@@ -51,14 +88,14 @@ onMounted(() => {
       <div v-if="message">
         <SnackMessenger
           :message="message"
-          :timeout="12000"
+          :timeout="3000"
           @dismissed.once="message = null"
         />
       </div>
     </v-row>
     <v-row justify="center">
       <video controls width="500" ref="videoPlayer">
-        <source :src="movieUrl" />
+        <source :src="selectedMovieURL" />
         Sorry, your browser doesn't support embedded videos.
       </video></v-row
     >

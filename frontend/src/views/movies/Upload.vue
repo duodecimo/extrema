@@ -1,87 +1,67 @@
-// { // "title": "string", // "is_active": true, // "upload": "string", //
-"user": 0 // }
-
 <script setup>
-  import { useMoviesStore } from "@/stores/movies";
-  import { useSystemStore } from "@/stores/system";
-  import { reactive, ref, watchEffect } from "vue";
-  import { useDisplay } from "vuetify";
-  import { useRouter } from "vue-router";
-  import SystemSpinning from "@/components/system/systemSpinning.vue";
-  import SnackMessenger from "@/components/utils/snackMessenger.vue";
+import { useMoviesStore } from "@/stores/movies";
+import { useSystemStore } from "@/stores/system";
+import { reactive, ref, watchEffect } from "vue";
+import { useDisplay } from "vuetify";
+import { useRouter } from "vue-router";
+import SystemSpinning from "@/components/system/systemSpinning.vue";
+import SnackMessenger from "@/components/utils/snackMessenger.vue";
 
-  const { mdAndDown } = useDisplay();
-  const moviesStore = useMoviesStore();
-  const systemStore = useSystemStore();
-  const router = useRouter();
-  const message = ref(null);
-  const success = ref(false);
-  watchEffect(() => {
-    if (success.value && !message.value) {
-      // vamos navegar para home
-      // condições: sucesso no login e snackMenssender dismissed.
-      console.log(
-        ">> watch success: ",
-        success.value,
-        " message: ",
-        message.value
-      );
-      router.push("/");
-    }
-    console.log(
-      "Em SystemLogin - watchEffect - loading: ",
-      systemStore.loading
-    );
-  });
-  const payload = reactive({
-    title: "",
-    is_active: true,
-    upload: "",
-    user: 0
-  });
-
-  movieRules: [
-    value => {
-      return (
-        !value ||
-        !value.length ||
-        value[0].size < 2000000 ||
-        "O tamanho do filme deve ser menor que 2 MB!"
-      );
-    }
-  ];
-
-  function uploadMovie() {
-    console.log(
-      "Em Upload.vue - uploadMovie() - payload.title: ",
-      payload.title
-    );
-    console.log(
-      "Em Upload.vue - uploadMovie() - payload.is_active: ",
-      payload.is_active
-    );
-    console.log(
-      "Em Upload.vue - uploadMovie() - payload.upload[0]: ",
-      payload.upload[0]
-    );
-    let formData = new FormData();
-    formData.append("user", systemStore.auth.userid);
-    formData.append("upload", payload.upload[0], payload.upload[0].name);
-    formData.append("is_active", true);
-    formData.append("title", payload.title);
-    console.log("Em Upload.vue - uploadMovie() - formData: ", formData);
-    moviesStore
-      .uploadMovie(formData)
-      .then(response => {
-        console.log("Em Upload.vue - uploadMovie() - resultado: ", response);
-        message.value = "Sucesso!";
-        success.value = true;
-      })
-      .catch(err => {
-        console.log("> Em Upload.vue - uploadMovie() - erro: ", err.message);
-        message.value = "Erro: " + err.message;
-      });
+const { mdAndDown } = useDisplay();
+const moviesStore = useMoviesStore();
+const systemStore = useSystemStore();
+const router = useRouter();
+const message = ref(null);
+const success = ref(false);
+watchEffect(() => {
+  if (success.value && !message.value) {
+    // vamos navegar para home
+    // condições: sucesso no login e snackMenssender dismissed.
+    console.log(">> watch success: ", success.value, " message: ", message.value);
+    router.push("/");
   }
+  console.log("Em SystemLogin - watchEffect - loading: ", systemStore.loading);
+});
+const payload = reactive({
+  title: "",
+  is_active: true,
+  url: "",
+  user: 0,
+});
+
+movieRules: [
+  (value) => {
+    return (
+      !value ||
+      !value.length ||
+      value[0].size < 2000000 ||
+      "O tamanho do filme deve ser menor que 2 MB!"
+    );
+  },
+];
+
+function uploadMovie() {
+  console.log("Em Upload.vue - uploadMovie() - payload.title: ", payload.title);
+  console.log("Em Upload.vue - uploadMovie() - payload.is_active: ", payload.is_active);
+  console.log("Em Upload.vue - uploadMovie() - payload.url[0]: ", payload.url[0]);
+  let formData = new FormData();
+  formData.append("user", systemStore.auth.userid);
+  formData.append("url", payload.url[0], payload.url[0].name);
+  formData.append("is_active", true);
+  formData.append("title", payload.title);
+  console.log("Em Upload.vue - uploadMovie() - formData: ", formData);
+  moviesStore
+    .uploadMovie(formData)
+    .then((response) => {
+      console.log("Em Upload.vue - uploadMovie() - resultado: ", response);
+      message.value = "Sucesso!";
+      success.value = true;
+    })
+    .catch((err) => {
+      console.log("> Em Upload.vue - uploadMovie() - erro: ", err.message);
+      message.value = "Erro: " + err.message;
+    });
+}
 </script>
 
 <template>
@@ -97,7 +77,7 @@
       <div v-if="message">
         <SnackMessenger
           :message="message"
-          :timeout="12000"
+          :timeout="3000"
           @dismissed.once="message = null"
         />
       </div>
@@ -105,8 +85,7 @@
 
     <v-card class="mx-auto">
       <v-card-title
-        ><span
-          class="ml-10 mt-10 text-h4 text-lg-h3 text-decoration-underline text-break"
+        ><span class="ml-10 mt-10 text-h4 text-lg-h3 text-decoration-underline text-break"
           >Movies: Upload</span
         ></v-card-title
       >
@@ -127,9 +106,7 @@
         >
         <v-row no-gutters justify="center" align="center"
           ><v-col cols="12" md="8">
-            <span class="text-h5 text-lg-h3 text-break"
-              >Título do filme</span
-            > </v-col
+            <span class="text-h5 text-lg-h3 text-break">Título do filme</span> </v-col
           ><v-col cols="12" md="8" class="text-left">
             <v-text-field
               counter="35"
@@ -147,7 +124,7 @@
           ><v-col cols="6">
             <v-file-input
               :rules="movieRules"
-              v-model="payload.upload"
+              v-model="payload.url"
               label="Filme"
               variant="filled"
               prepend-icon="mdi-movie"
@@ -166,12 +143,3 @@
     </v-card>
   </v-container>
 </template>
-
-// const apiClient = axios.create({ // baseURL:
-"http://127.0.0.1:8000/api/store-doc/", // withCredentials: false, // headers: {
-// // Accept: "application/json", // "Content-Type": "multipart/form-data", //
-}, // }); // const createStoreDoc = () => { // let formData = new FormData(); //
-formData.append('name', formState.name); // formData.append('file',
-formState.file, 'filename.docx'); // apiClient.post('', formData) //
-.then((response) => { // console.log("success!" + response.data); //
-getStoreDoc() // }) // .catch((error) => { // console.log(error); // }); // }
