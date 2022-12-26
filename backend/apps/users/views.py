@@ -1,3 +1,4 @@
+import logging
 import os
 
 import jwt
@@ -33,6 +34,8 @@ from .serializers import (
 )
 from .utils import Util
 
+logger = logging.getLogger("apps")
+
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -54,23 +57,25 @@ class RegisterView(generics.GenericAPIView):
     serializer_class = RegisterSerializer
 
     def post(self, request):
-        print(">>> Em apps/users/views.py - RegisterView - post - user: ", request.data)
+        logger.info(
+            "Em apps/users/views.py - RegisterView - post - user:  %s" % (request.data)
+        )
         user = request.data
         serializer = self.serializer_class(data=user)
         if serializer.is_valid(raise_exception=False):
-            print(
-                ">>> Em apps/users/views.py - RegisterView - post - serializer is valid! "
+            logger.info(
+                "Em apps/users/views.py - RegisterView - post - serializer is valid!"
             )
             serializer.save()
             user_data = serializer.data
             user = User.objects.get(email=user_data["email"])
         else:
-            print(
-                ">>> Em apps/users/views.py - RegisterView - post - serializer is NOT valid! "
+            logger.info(
+                "Em apps/users/views.py - RegisterView - post - serializer IS NOT valid!"
             )
-            print(
-                ">>> Em apps/users/views.py - RegisterView - user['email']: ",
-                user["email"],
+            logger.info(
+                "Em apps/users/views.py - RegisterView - user['email']:  %s"
+                % (user["email"])
             )
             user = User.objects.get(email=user["email"])
             if user.is_verified:
@@ -99,9 +104,9 @@ class RegisterView(generics.GenericAPIView):
         # debugging = os.environ.get('DEBUG') or True
         debugging = True
         if debugging == True:
-            print(
-                "In authentication.views, RegisterView, post, sending email: ",
-                email_body,
+            logger.info(
+                "In authentication.views, RegisterView, post, sending email:  %s"
+                % (email_body)
             )
 
         # need to register an email account
@@ -122,9 +127,10 @@ class VerifyEmail(views.APIView):
         token = request.GET.get("token")
         debugging = os.environ.get("DEBUG") or True
         if debugging == True:
-            print("Em apps/user/views.py, VerifyEmail:")
-            print("SECRET_KEY: ", settings.SECRET_KEY)
-            print("   token: ", token)
+            logger.info(
+                "Em apps/user/views.py, VerifyEmail - SECRET_KEY: %s token: %s"
+                % (settings.SECRET_KEY, token)
+            )
         try:
             payload = jwt.decode(token, settings.SECRET_KEY)
             # payload = jwt.decode(token, settings.SECRET_KEY, algorithm="HS256")
@@ -145,13 +151,13 @@ class VerifyEmail(views.APIView):
             )
         except jwt.exceptions.DecodeError as identifier:
             if debugging == True:
+                logger.info("Em apps/user/views.py, VerifyEmail: DecodeError ...")
                 print("Em apps/user/views.py, VerifyEmail: DecodeError ...")
                 print("Unverifyed header: ", jwt.get_unverified_header(token))
                 print(
                     "claims without validation: ",
                     jwt.decode(token, options={"verify_signature": False}),
                 )
-
             # return Response(,
             #                 status=status.HTTP_400_BAD_REQUEST)
             return render(

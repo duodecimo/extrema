@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "colorlog",
     "apps.movies",
     "apps.users",
     "drf_spectacular",
@@ -58,6 +59,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "request_logging.middleware.LoggingMiddleware",
 ]
 
 ROOT_URLCONF = "conf.urls"
@@ -183,3 +185,103 @@ SPECTACULAR_SETTINGS = {
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "extremasystems@gmail.com"
+EMAIL_HOST_PASSWORD = "fwjfsbyndikqhzry"
+
+# LOGGING
+
+REQUEST_LOGGING_ENABLE_COLORIZE = False
+SENSITIVE_WORDS = ["password", "pw", "refresh"]
+
+# Obs.: o valor de interval em logging.TimedRotatingFileHandler handlers
+# vai determinar quantos arquivos de backup antigos serão guardados
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "pw": {"()": "apps.utils.logging_formatters.PasswordFormatter"},
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {pathname} {funcName} line number: {lineno:d} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} {asctime} {message}",
+            "style": "{",
+        },
+        "colored": {
+            "()": "colorlog.ColoredFormatter",
+            "format": "%(log_color)s %(levelname)-8s %(asctime)s %(pathname)s %(funcName)s %(message)s",
+            "reset": True,
+            "log_colors": {
+                "DEBUG": "cyan",
+                "INFO": "green",
+                "WARNING": "bold_yellow",
+                "ERROR": "red",
+                "CRITICAL": "red,bg_white",
+            },
+            "style": "%",
+        },
+    },
+    "filters": {
+        "require_debug_true": {
+            "()": "django.utils.log.RequireDebugTrue",
+        },
+        "pw_filter": {
+            "()": "apps.utils.logging_filters.PasswordFilter",
+        },
+    },
+    "handlers": {
+        "file_app_sys": {
+            "level": "DEBUG",
+            "class": "logging.handlers.TimedRotatingFileHandler",
+            "when": "midnight",
+            "interval": 3,
+            "filename": "/tmp/app_sys.log",
+            "formatter": "simple",
+        },
+        "file_requests": {
+            "level": "DEBUG",
+            "class": "logging.handlers.TimedRotatingFileHandler",
+            "when": "midnight",
+            "interval": 3,
+            "filters": ["require_debug_true", "pw_filter"],
+            "filename": "/tmp/requests.log",
+            "formatter": "simple",
+        },
+        "file_apps": {
+            "level": "DEBUG",
+            "class": "logging.handlers.TimedRotatingFileHandler",
+            "when": "midnight",
+            "interval": 3,
+            "filename": "/tmp/apps.log",
+            "formatter": "verbose",
+        },
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "colored",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console", "file_app_sys"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "apps": {
+            "handlers": ["console", "file_apps"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+        "django.request": {
+            "handlers": ["file_requests"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
+    },
+}

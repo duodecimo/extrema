@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib import auth
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
@@ -12,6 +14,8 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
 from .models import User
 
+logger = logging.getLogger("apps")
+
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -23,12 +27,12 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     def create(self, validated_data):
         if "password" in validated_data:
-            print("<<<< validated_data (with password): ", validated_data)
+            logger.info("validated_data (with password): %s" % (validated_data))
             password = validated_data.get("password", None)
-            print("<<< password: ", password)
+            logger.info("password: %s" % (password))
             # Turn a plain-text password into a hash for database storage
             password = make_password(password)
-            print(">>> password: ", password)
+            logger.info("encoded password: %s" % (password))
             # remove password key/value pair from dict
             validated_data.pop("password")
             # add key/value pair with new password value
@@ -39,13 +43,13 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         return user
 
     def update(self, instance, validated_data):
-        print("<<<< validated_data: ", validated_data)
+        logger.info("validated_data: %s" % (validated_data))
 
         for key, value in validated_data.items():
             if key == "password":
-                print("<<< password: ", value)
+                logger.info("password: %s" % (value))
                 password = make_password(value)
-                print(">>> password: ", password)
+                logger.info("encoded password: %s" % (password))
                 instance.password = password
             else:
                 setattr(instance, key, value)
@@ -77,19 +81,16 @@ class RegisterSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         email = attrs.get("email", "")
         name = attrs.get("name", "")
-        print(
-            ">>> In apps.users.serializers.RegisterSerializer - validate - email: ",
-            email,
-            " name: ",
-            name,
-            " attrs: ",
-            attrs,
+
+        logger.info(
+            "n apps.users.serializers.RegisterSerializer - validate - email: %s name: %s attrs: %s"
+            % (email, name, attrs)
         )
 
         # Problema na função. Por exemplo, espaço (no nome) não é alnum ...
         # if not name.isalnum():
-        #     print(
-        #         ">>> In apps.users.serializers.RegisterSerializer - validate - name is NOT alnum! "
+        #     logger.info(
+        #         "In apps.users.serializers.RegisterSerializer - validate - name is NOT alnum!"
         #     )
         #     raise serializers.ValidationError(self.default_error_messages)
         return attrs
