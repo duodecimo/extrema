@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, reactive } from "vue";
+import { onMounted, ref, reactive, nextTick } from "vue";
 import { useSystemStore } from "@/stores/system";
 import { useMoviesStore } from "@/stores/movies";
 import SystemSpinning from "@/components/system/systemSpinning.vue";
@@ -20,8 +20,8 @@ const emit = defineEmits(["end"]);
 const moviesStore = useMoviesStore();
 const systemStore = useSystemStore();
 
-const isPlaying = ref(false);
 const videoPlayer = ref(null);
+const isPlaying = ref(false);
 const message = ref(null);
 const success = ref(false);
 
@@ -41,6 +41,10 @@ function foward() {
 
 function rewind() {
   videoPlayer.value.rewind();
+}
+
+function onPause() {
+  console.log(">>> Event: pause was clicked. time: ", videoPlayer.value.currentTime);
 }
 
 onMounted(async () => {
@@ -72,6 +76,12 @@ onMounted(async () => {
       console.log("In moviePlayer.vue - onMounted() - erro: ", err);
       message.value = err;
     });
+  nextTick(() => {
+    console.log(">>> video player: ", videoPlayer.value);
+    console.log(">>> video player controls: ", videoPlayer.value.controls);
+    console.log(">>> video player currentTime ", videoPlayer.value.currentTime);
+    videoPlayer.value.addEventListener("pause", onPause);
+  });
 });
 </script>
 
@@ -94,7 +104,7 @@ onMounted(async () => {
       </div>
     </v-row>
     <v-row justify="center">
-      <video controls width="500" ref="videoPlayer">
+      <video preload="auto" controls width="500" ref="videoPlayer">
         <source :src="selectedMovieURL" />
         Sorry, your browser doesn't support embedded videos.
       </video></v-row

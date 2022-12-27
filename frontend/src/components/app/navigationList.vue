@@ -14,6 +14,7 @@ const items = [
   { title: "Voices", icon: "mdi-bullhorn", to: "/voices" },
   { title: "Uploads", icon: "mdi-upload", to: "/uploads" },
   { title: "Play Movie", icon: "mdi-movie", to: "/play" },
+  { title: "Artplayer", icon: "mdi-movie", to: "/artplayer" },
 ];
 
 const getImageUrl = (name) => {
