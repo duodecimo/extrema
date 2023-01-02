@@ -34,8 +34,8 @@ movieRules: [
     return (
       !value ||
       !value.length ||
-      value[0].size < 2000000 ||
-      "O tamanho do filme deve ser menor que 2 MB!"
+      value[0].size < 9000000 ||
+      "O tamanho do filme deve ser menor que 9 MB!"
     );
   },
 ];
