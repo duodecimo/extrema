@@ -17,10 +17,6 @@ const selectedMovieID = ref(null);
 
 onMounted(() => {
   console.log("In Play.vue - onMounted()");
-  // var loc = window.location.pathname;
-  // var dir = loc.substring(0, loc.lastIndexOf("/"));
-  // console.log(">>>>>> Current path: ", window.location.pathname);
-  // console.log(">>>>>> Current directory: ", dir);
   moviesStore
     .getMovies()
     .then((response) => {
@@ -71,7 +67,7 @@ onMounted(() => {
         <v-card-title
           ><span
             class="ml-10 mt-10 text-h4 text-lg-h3 text-decoration-underline text-break"
-            >Clique em um filme para assistir</span
+            >Escolha um filme para assistir</span
           ></v-card-title
         >
         <v-card-subtitle></v-card-subtitle>

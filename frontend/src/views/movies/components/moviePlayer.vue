@@ -24,6 +24,7 @@ const videoPlayer = ref(null);
 const isPlaying = ref(false);
 const message = ref(null);
 const success = ref(false);
+const timer = ref(0);
 
 function play() {
   videoPlayer.value.play();
@@ -36,15 +37,39 @@ function pause() {
 }
 
 function foward() {
-  videoPlayer.value.foward();
+  if (videoPlayer && videoPlayer.value) {
+    console.log(
+      ">>> Event: foward was clicked. time before: ",
+      videoPlayer.value.currentTime
+    );
+    videoPlayer.value.currentTime = videoPlayer.value.currentTime + 10;
+    console.log(
+      ">>> Event: foward was clicked. time after: ",
+      videoPlayer.value.currentTime
+    );
+  }
 }
 
 function rewind() {
-  videoPlayer.value.rewind();
+  if (videoPlayer && videoPlayer.value && videoPlayer.value.currentTime > 10) {
+    console.log(
+      ">>> Event: rewind was clicked. time before: ",
+      videoPlayer.value.currentTime
+    );
+    videoPlayer.value.currentTime = videoPlayer.value.currentTime - 10;
+    console.log(
+      ">>> Event: rewind was clicked. time after: ",
+      videoPlayer.value.currentTime
+    );
+  }
 }
 
 function onPause() {
   console.log(">>> Event: pause was clicked. time: ", videoPlayer.value.currentTime);
+}
+
+function onTimeupdate() {
+  timer.value = videoPlayer.value.currentTime;
 }
 
 onMounted(async () => {
@@ -81,6 +106,7 @@ onMounted(async () => {
     console.log(">>> video player controls: ", videoPlayer.value.controls);
     console.log(">>> video player currentTime ", videoPlayer.value.currentTime);
     videoPlayer.value.addEventListener("pause", onPause);
+    videoPlayer.value.addEventListener("timeupdate", onTimeupdate);
   });
 });
 </script>
@@ -126,9 +152,25 @@ onMounted(async () => {
       <v-col cols="2">
         <v-btn color="primary" @click.stop="rewind()">rewind</v-btn>
       </v-col> -->
+      <v-col cols="6">
+        <v-toolbar color="primary" dense floating dark>
+          <v-btn @click.stop="rewind">rewind</v-btn>
+          <v-btn @click.stop="emit('end')">Fim</v-btn>
+          <v-btn @click.stop="foward">foward</v-btn>
+          <span>video time: {{ timer }}</span>
+        </v-toolbar>
+      </v-col>
+      <!-- <v-btn color="primary" @click.stop="rewind">rewind</v-btn>
+      </v-col>
       <v-col cols="2">
         <v-btn color="primary" @click.stop="emit('end')">Fim</v-btn>
       </v-col>
+      <v-col cols="2">
+        <v-btn color="primary" @click.stop="foward">foward</v-btn>
+      </v-col>
+      <v-col cols="2">
+        <span>video time: {{ timer }}</span>
+      </v-col> -->
     </v-row>
   </v-container>
 </template>
